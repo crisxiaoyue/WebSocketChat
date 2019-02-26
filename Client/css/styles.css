@@ -1,1 +1,41 @@
  
+body{
+    background: url("wallpaper.jpg")!important;
+}
+
+.bg-light{
+    background-color:#eeeeee!important;
+}
+.bg-rosa{
+    background-color: #f49674!important;
+}
+#messages{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.rebut{
+    word-wrap: break-word;
+    max-width: 90%;
+    justify-items: flex-start;
+    align-self:flex-start; 
+    margin-bottom: 1%;
+    
+    border-bottom-left-radius: 0px!important;
+}
+.enviat{
+    word-wrap: break-word;
+    max-width: 90%;
+    background-color:#f49674;
+    justify-items: flex-end;
+    align-self:flex-end; 
+    margin-bottom: 1%;
+    border-bottom-right-radius: 0px!important;
+}
+.list-group-item, .list-group-item:first-child, .list-group-item:last-child{
+    border-radius: 10px;
+}
+#users .card{
+    margin-bottom: 1%;
+}
+
