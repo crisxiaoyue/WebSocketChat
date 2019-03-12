@@ -30,7 +30,7 @@ wsServer.on('request', function(request) {
     // Note that for production applications (security concerns) we need to 
     // check that the request origin is trusted.
     var connection = request.accept(null, request.origin);
-
+    
     // New connection established so we notify ChatServer
     chatServer.onConnectionOpen(connection);
 

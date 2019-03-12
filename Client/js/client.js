@@ -1,38 +1,47 @@
 'use strict';
-
 // Connect using WebSocket to the chat server address
 var ws = new WebSocket("ws://127.0.0.1:1337/");
-var nomUser = prompt("introdueix User");
-var nom = new Vue({
-    el: '#nom',
+/**
+ * PART FITXER DE LOGIN
+ */
+var nickname;
+var nomUser = nickname;
+document.getElementById("menu").style.display = 'none';
+var app = new Vue({
+    el: '#app',
     data: {
-        nouNom: ''
+        email: '',
+        passwd: '',
+        nouNom: '',
+        missatge: '',
     },
     methods: {
+        iniciaSessio: function (event) {
+            var usuariLogin = {
+                type: "login",
+                user: this.email,
+                password: this.passwd
+            }
+            var loginString = JSON.stringify(usuariLogin);
+            ws.send(loginString);
+            console.log(loginString);
+        },
         canviaNom() {
             var nouUserName = {
                 type: "4",
+                idUser : this.email,
                 nomActualitzat: this.nouNom
             }
             var nomUserNameString = JSON.stringify(nouUserName);
             ws.send(nomUserNameString);
             nomUser = this.nouNom;
+            nickname = this.nouNom;
             this.nouNom = '';
+           
 
-        }
-    }
-})
-let compt = 0;
-var app = new Vue({
-    el: '#app',
-    data: {
-        username: nomUser,
-        missatge: ''
-    },
-    // define methods under the `methods` object
-    methods: {
-        // Mètode que envia un missatge de l'usuari actual al servidor 
-        enviaMissatge: function (event) {
+        },
+          // Mètode que envia un missatge de l'usuari actual al servidor 
+          enviaMissatge: function (event) {
 
             console.log(this.missatge);
             var missatgeAEnviar = {
@@ -43,39 +52,48 @@ var app = new Vue({
             var messageString = JSON.stringify(missatgeAEnviar);
             ws.send(messageString);
             this.missatge = '';
-        },
-        getUsername: function () {
-            return this.username;
         }
+     
     }
 })
 
 
+function comprovaInici(dades) {
+    if (dades.missatge == 'correcte') {
+        console.log("elimina vista login");
+        console.log("carrega chat vista");
+        document.getElementById("login").style.display = 'none';
+        document.getElementById("menu").style.display = 'inline';
+        nickname = dades.username;
+        console.log(nickname);
+
+    } else if (dades.missatge == 'incorrecte') {
+        alert("Login Incorrecte!")
+    }
+}
+
+let compt = 0;
 
 // Called when the connection is opened
 ws.onopen = function () {
     console.log("Conexio oberta");
-    // Send "Hello Server" string to the Server
-    var nameUser = {
-        type: '3',
-        username: nomUser
-    };
-    var usuariString = JSON.stringify(nameUser);
-    ws.send(usuariString)
+   
 };
 
 // Called when a new message is received
 ws.onmessage = function (evt) {
     console.log(evt.data);
     var dades = JSON.parse(evt.data);
-    //console.log("Missatge rebut: ", dades);
 
     switch (dades.type) {
         case "5":
-            creaMissatge(dades, app.getUsername());
+            creaMissatge(dades, nickname);
             break;
         case "2":
             repLlista(dades);
+            break;
+        case "IniciaSessio":
+            comprovaInici(dades);
             break;
     }
 
@@ -165,6 +183,7 @@ function eliminaLlistaUsuaris() {
         myNode.removeChild(myNode.firstChild);
     }
 }
+
 // Called when the connection is closed
 ws.onclose = function () {
     console.log("Conexio tancada");

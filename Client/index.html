@@ -1,93 +1,117 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>vue-router</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/styles.css">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
-  <title>WebSocket Chat</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
 </head>
 
 <body>
-  <h3 class="mt-5 text-center">Chat WebSockets</h3>
-  <div class="container-fluid mt-5 ">
-    <div class="row justify-content-center ">
-      <div class="col-sm-3 p-5 bg-dark">
-        <h6 class="text-light text-center">Usuaris Connectats</h6>
-        <div id="users">
+    <div id="app">
+        <div id="login" class="form-signin">
+            <img class="mb-4 mx-auto d-block"
+                src="https://images.vexels.com/media/users/3/129759/isolated/preview/e57821f1317893d1c2d8e184d4f9d595-chat-bubble-icon-by-vexels.png"
+                alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal text-center">Chat BoscdelaComa</h1>
+            <label for="inputEmail" class="sr-only">Introdueix el Correu electrònic</label>
+            <input v-model="email" name="email" id="inputEmail" class="form-control" placeholder="Correu electrònic"
+                required autofocus>
+            <label for="inputPassword" class="sr-only">Contrassenya</label>
+            <input v-model="passwd" type="password" name="passwd" id="inputPassword" class="form-control"
+                placeholder="Contrassenya" required>
+
+            <button class="btn btn-lg btn-primary btn-block" v-on:click="iniciaSessio">Entra</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2019 - Cris</p>
 
         </div>
-      </div>
-      <div class="col-sm-6 bg-light p-5 ">
-        <div class="row justify-content-center">
-          <div class="col-sm-12">
-            <ul id="messages">
-            </ul>
-          </div>
+        <div id="menu" class="chat">
+            <div class="container-fluid mt-5 ">
+                <div class="row justify-content-center ">
+                    <div class="col-sm-3 p-5 bg-dark">
+                        <h6 class="text-light text-center">Usuaris Connectats</h6>
+                        <div id="users">
 
-        </div>
-        <div id="app" class="input-group d-flex align-items-center mt-5">
-          <input type="text" v-model="missatge" class="form-control border-0 align-self-center" id="message"
-            placeholder="Escriu un missatge..." aria-label="Amount (to the nearest dollar)">
-          <button class="btn btn-primary align-self-center" v-on:click="enviaMissatge" type="button">Envia
+                        </div>
+                    </div>
+                    <div class="col-sm-6 bg-light p-5 ">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-12">
+                                <ul id="messages">
+                                </ul>
+                            </div>
 
-        </div>
-        <br>
-        <div id="nom">
-          <button type="button" v-on:click="canviaNom" class="btn btn-primary" data-toggle="modal"
-            data-target="#exampleModal">Canvia el
-            nom</button>
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Canvia el nom</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
+                        </div>
+                        <div  class="input-group d-flex align-items-center mt-5">
+                            <input type="text" v-model="missatge" class="form-control border-0 align-self-center"
+                                id="message" placeholder="Escriu un missatge..."
+                                aria-label="Amount (to the nearest dollar)">
+                            <button class="btn btn-primary align-self-center" v-on:click="enviaMissatge"
+                                type="button">Envia</button>
 
-                  <div class="form-group">
-                    <label for="new_name" class="col-form-label">Introdueix el nom d'usuari que vols modificar:</label>
-                    <input type="text" v-model="nouNom" class="form-control" id="new_name">
-                  </div>
+                        </div>
+                        <br>
+                        <div id="nom">
+                            <button type="button" v-on:click="canviaNom" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal">Canvia el
+                                nom</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Canvia el nom</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="form-group">
+                                                <label for="new_name" class="col-form-label">Introdueix el nom d'usuari
+                                                    que
+                                                    vols modificar:</label>
+                                                <input type="text" v-model="nouNom" class="form-control" id="new_name">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Cancel·la</button>
+                                            <button type="button" v-on:click="canviaNom" data-dismiss="modal"
+                                                class="btn btn-primary">Actualitza</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-3">
+
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel·la</button>
-                  <button type="button" v-on:click="canviaNom" data-dismiss="modal" class="btn btn-primary">Actualitza</button>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-sm-3">
-
-        </div>
-      </div>
     </div>
 
-    <script src="js/client.js"></script>
+    <script src="./js/client.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-      crossorigin="anonymous"></script>
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-      crossorigin="anonymous"></script>
-
-
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
