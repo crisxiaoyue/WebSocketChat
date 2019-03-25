@@ -7,7 +7,7 @@ class BaseDades {
     }
     creaConnexio() {
         this.con = mysql.createConnection({
-            host: "192.168.0.88",
+            host: "213.98.130.142",
             database: "cristina_chat",
             user: "cristina",
             password: "patata333"
@@ -30,17 +30,59 @@ class BaseDades {
         this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
             //En aquests moments no es fa res mes fins rebre la resposta.
             if (result) {
-                chatServer.onSqlAnswer(con, result);  // Se suposa que els parametres necessaris s'han copiat automaticament i son reconeguts al context sino 
+                chatServer.onSqlAnswerLogin(con, result);  // Se suposa que els parametres necessaris s'han copiat automaticament i son reconeguts al context sino 
             }
         })
     }
     canviaNom(usuari,nickname){
+       // comprovaNom(nickname);
         let sql = "UPDATE Clients SET username = '" + nickname +"' WHERE id = '" + usuari + "';" 
         this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
             //En aquests moments no es fa res mes fins rebre la resposta.
             if (result) {
                console.log("dada actualitzada!")
             }
+        })
+    }
+    comprovaNom(id, nickname,con,chatServer){
+        let sql = "SELECT * FROM Clients WHERE username = '" + nickname + "';"
+        this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
+            //En aquests moments no es fa res mes fins rebre la resposta.
+            if (result) {
+                chatServer.onSqlAnswerNom(id, nickname,con, result);  
+            }
+        })
+    }
+    comprovaEmail(email,username,password,con,chatServer){
+        let sql = "SELECT * FROM Clients WHERE id = '" + email + "';"
+        this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
+            //En aquests moments no es fa res mes fins rebre la resposta.
+            if (result) {
+                chatServer.onSqlAnswerEmail(email,username,password,con,result);  
+            }
+        })
+    }
+
+    afegeixUsuari(email,username,password){
+        let sql = "INSERT INTO Clients VALUES ('" + email + "', '"+ username +"', '"+ password +"', '' );";
+        this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
+            //En aquests moments no es fa res mes fins rebre la resposta.
+            if (result) {
+               console.log("dada inserida"); 
+            } 
+            if(err){
+                console.log(err);
+            }
+        })
+    }
+    afegeixFoto(idUser,foto){
+        let sql = "UPDATE Clients SET foto = '" + foto +"' WHERE id = '" + idUser + "';" 
+        this.con.query(sql, function (err, result) {   //Quan arriba el resultat “…” -> executa la funcio (func(err,result)) 
+            //En aquests moments no es fa res mes fins rebre la resposta.
+            if (result) {
+               console.log("foto actualitzada!")
+            }
+           
         })
     }
 

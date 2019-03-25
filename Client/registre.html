@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <title>Registre</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link rel="stylesheet" href="./css/register.css">
+</head>
+
+<body class="align-items-center d-flex justify-content-center">
+
+
+    <div id="app" class="form-signin card w-25">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Crea't un Compte</h4>
+         
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                    </div>
+                    <input v-model="email" name="" class="form-control" placeholder="Email" type="email">
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input v-model="username" name="" class="form-control" placeholder="Nickname" type="text">
+                </div> <!-- form-group// -->
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input v-model="password" class="form-control" placeholder="Contrasenya" type="password">
+                </div> <!-- form-group// -->
+             
+                <div class="form-group">
+                    <button v-on:click="creaUsuari" class="btn btn-primary btn-block"> Crea el Compte! </button>
+                </div> <!-- form-group// -->
+                <p class="text-center">Ja tens un compte? <a href="./index.html">Inicia Sessió</a> </p>
+  
+        </article>
+    </div>
+
+    <script src="js/registre.js"></script>
+</body>
+
+</html>

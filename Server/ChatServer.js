@@ -40,8 +40,6 @@ class ChatServer {
 
   }
 
-
-
   // TIPUS DE MISSATGES:
   /**
    * 1 - Servidor rep un missatge, i l'ha d'assignar el nom d'usuari que ha enviat el missatge i fer un broadcast als clients.
@@ -66,14 +64,26 @@ class ChatServer {
         break;
       case "4":
         // mirar si el nom esta repetit o no:
-        this.listClients.get(con).setUsername(data.nomActualitzat);
-        console.log("nou nom " + data.nomActualitzat);
-        console.log("id " + data.idUser);
-        this.bd.canviaNom(data.idUser,data.nomActualitzat);
-        this.enviaNomsClients();
+        // this.listClients.get(con).setUsername(data.nomActualitzat); 
+        // this.enviaNomsClients();
+        // console.log("nou nom " + data.nomActualitzat);
+        //  console.log("id " + data.idUser);
+        this.bd.comprovaNom(data.idUser, data.nomActualitzat, con, this);
+
         break;
       case "login":
-        this.bd.comprovaUsuari(data.user,data.password,con,this);
+        this.bd.comprovaUsuari(data.user, data.password, con, this);
+        break;
+      case "newUser":
+        this.bd.comprovaEmail(data.email, data.username, data.password,con,this)
+        console.log("afegir usuari ");
+        break;
+      case "foto":
+        this.bd.afegeixFoto(data.idUser, data.foto)
+        this.listClients.get(con).setFoto(data.foto)
+        console.log(this.listClients.get(con).getFoto())
+        var fotoString = JSON.stringify(data);
+        this.enviaBroadcastClients(fotoString)
         break;
 
     }
@@ -82,7 +92,9 @@ class ChatServer {
 
   enviaBroadcastClients(data) {
     this.listClients.forEach((client, con) => {
-      this.listClients.get(con).getConnection().sendUTF(data);
+      if (this.listClients.get(con).isAuth()) {
+        this.listClients.get(con).getConnection().sendUTF(data);
+      }
     })
   }
   enviaNomsClients() {
@@ -93,9 +105,9 @@ class ChatServer {
 
     // Afegeixo el nom de l'usuari a l'array usuaris de l'objecte creat.
     this.listClients.forEach((client, con) => {
-      if (this.listClients.get(con).isAuth() == true) {
+      if (this.listClients.get(con).isAuth()) {
         nomUsuaris.usuaris.push(client.getUsername());
-     }
+      }
     });
     // Envio a cada client la llista dels usuaris.
     this.listClients.forEach((client, con) => {
@@ -105,21 +117,21 @@ class ChatServer {
 
   }
 
-  onSqlAnswer(con, result) { // Per saber quina consulta és el resultat de la query
+  onSqlAnswerLogin(con, result) { // Per saber quina consulta és el resultat de la query
     // TO DO
     // Comprovar que la con existeix, podria desconectarse l'usuari.
     console.log(result);
     if (result.length > 0) {
       // comprovo que la connexió del client està oberta.
-      if(this.listClients.get(con) != undefined){
-        this.enviaMissatgeLogin(con,result);
+      if (this.listClients.get(con) != undefined) {
+        this.enviaMissatgeLogin(con, result);
         console.log(result[0].id);
         // actualitzar auth
         this.listClients.get(con).setAuth(true);
         console.log(this.listClients.get(con).isAuth());
         // canviar nickname
         this.listClients.get(con).setUsername(result[0].username)
-        
+
         console.log(this.listClients.get(con).getUsername());
         // broadcast de llista client. o si es canvia de nom tambe senviara el broadcast de clients
         // s'ha de enviar la llista de clients nomes als que s'han autentificat. 
@@ -129,31 +141,70 @@ class ChatServer {
       }
 
     }
-    else{
+    else {
       console.log("No s'ha trobat la dada");
       this.tornaFerLogin(con);
     }
 
   }
 
-  enviaMissatgeLogin(con,result){
+  enviaMissatgeLogin(con, result) {
     var obj = {
-      type:'IniciaSessio',
+      type: 'IniciaSessio',
       missatge: 'correcte',
-      username : result[0].username
+      username: result[0].username,
+      id: result[0].id,
     }
     var objStr = JSON.stringify(obj)
     this.listClients.get(con).getConnection().sendUTF(objStr)
   }
 
-  tornaFerLogin(con){
+  tornaFerLogin(con) {
     var obj = {
-      type:'IniciaSessio',
+      type: 'IniciaSessio',
       missatge: 'incorrecte'
     }
     var objStr = JSON.stringify(obj)
     this.listClients.get(con).getConnection().sendUTF(objStr)
   }
+  onSqlAnswerNom(id, nickname, con, result) {
+    console.log(result);
+    if (result.length > 0) {
+      // Hi ha 1 o més usuaris amb aquest nom
+      var obj = {
+        type: 'canviNom',
+        missatge: 'incorrecte'
+      }
+      var objStr = JSON.stringify(obj)
+      this.listClients.get(con).getConnection().sendUTF(objStr)
+    } else {
+      this.bd.canviaNom(id,nickname)
+      this.listClients.get(con).setUsername(nickname);
+      this.enviaNomsClients();
+    }
+  }
+  onSqlAnswerEmail(email, username, password, con, result){
+    console.log(result);
+    if (result.length > 0) {
+      // Hi ha 1 o més usuaris amb aquest nom
+      var obj = {
+        type: 'afegeixUser',
+        missatge : 'incorrecte'
+      }
+      var string = JSON.stringify(obj)
+      this.listClients.get(con).getConnection().sendUTF(string)
+      console.log(obj);
+    } else {
+      var obj = {
+        type: 'afegeixUser',
+        missatge : 'correcte'
+      }
+      var string = JSON.stringify(obj)
+      this.listClients.get(con).getConnection().sendUTF(string)
+      this.bd.afegeixUsuari(email,username,password)
+    }
+  }
+ 
 }
 // We export our class so we can import it later with 'require'
 module.exports = ChatServer;

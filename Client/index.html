@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>vue-router</title>
+    <title>Chat BoscComa</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 </head>
@@ -26,7 +27,8 @@
             <input v-model="passwd" type="password" name="passwd" id="inputPassword" class="form-control"
                 placeholder="Contrassenya" required>
 
-            <button class="btn btn-lg btn-primary btn-block" v-on:click="iniciaSessio">Entra</button>
+            <button class="btn btn-warning btn-block" v-on:click="iniciaSessio">Entra</button>
+            <a class="btn btn-secondary btn-block" href="./registre.html" role="button">Registra't</a>
             <p class="mt-5 mb-3 text-muted">&copy; 2019 - Cris</p>
 
         </div>
@@ -41,13 +43,13 @@
                     </div>
                     <div class="col-sm-6 bg-light p-5 ">
                         <div class="row justify-content-center">
-                            <div class="col-sm-12">
+                            <div id="scrollMissatges" class="col-sm-12">
                                 <ul id="messages">
                                 </ul>
                             </div>
 
                         </div>
-                        <div  class="input-group d-flex align-items-center mt-5">
+                        <div class="input-group d-flex align-items-center mt-5">
                             <input type="text" v-model="missatge" class="form-control border-0 align-self-center"
                                 id="message" placeholder="Escriu un missatge..."
                                 aria-label="Amount (to the nearest dollar)">
@@ -57,9 +59,11 @@
                         </div>
                         <br>
                         <div id="nom">
-                            <button type="button" v-on:click="canviaNom" class="btn btn-primary" data-toggle="modal"
+                            <button type="button" v-on:click="tancaSessio" class="btn btn-primary">Surt</button>
+                            <button type="button" v-on:click="canviaNom" class="btn btn-warning" data-toggle="modal"
                                 data-target="#exampleModal">Canvia el
                                 nom</button>
+                            <button type="button"  class="btn btn-danger"data-toggle="modal" data-target="#modalImatge">Canvia Imatge</button>
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,17 +82,44 @@
                                                     que
                                                     vols modificar:</label>
                                                 <input type="text" v-model="nouNom" class="form-control" id="new_name">
+                                                
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Cancel·la</button>
                                             <button type="button" v-on:click="canviaNom" data-dismiss="modal"
                                                 class="btn btn-primary">Actualitza</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Modal imatge-->
+                            <div class="modal fade" id="modalImatge" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Imatge de Perfil</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group">
+                                            <label for="new_name" class="col-form-label">Selecciona la foto que vols tenir:</label>
+                                            <input type="text" v-model="novaFoto" class="form-control" id="new_name">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" v-on:click="canviaImatge" data-dismiss="modal"
+                                            class="btn btn-primary">Actualitza</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                         </div>
 
                     </div>

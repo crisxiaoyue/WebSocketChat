@@ -69,3 +69,24 @@ body{
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
+ div#scrollMissatges{
+  height: 50vh;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+.time_date_right {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  justify-items: flex-end;
+  align-self: flex-end;
+  margin-bottom: 13px;
+}
+.time_date_left{
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  justify-items: flex-start;
+  align-self: flex-start;
+  margin-bottom: 13px;
+}

@@ -11,6 +11,7 @@ class ClientData {
     this.con = con;
     this.username = username;
     this.auth = false; 
+    this.foto = '';
   }
 
   // Getter of connection
@@ -28,6 +29,12 @@ class ClientData {
   }
   setUsername(username){
     this.username = username;
+  }
+  getFoto(){
+    return this.foto;
+  }
+  setFoto(foto){
+    this.foto = foto;
   }
   isAuth(){
     return this.auth;
